@@ -9,3 +9,8 @@ body {
     width: 100%; 
 }
 
+.mapboxgl-ctrl--job-search-filters, .mapboxgl-ctrl-top-left{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+}

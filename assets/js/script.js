@@ -19,7 +19,7 @@ const map = new mapboxgl.Map({
     container: 'map',
     // Choose from Mapbox's core styles [https://docs.mapbox.com/api/maps/styles/]
     style: 'mapbox://styles/mapbox/navigation-night-v1',
-    center: [ -1.0147865491083536, 51.879295638075135],
+    center: [-1.0147865491083536, 51.879295638075135],
     zoom: 7,
     maxBounds: bounds,
     });
@@ -33,4 +33,39 @@ map.addControl(
         mapboxgl: mapboxgl,
     }
     ), 'top-left');
+
+
+function buildSearchInputs(){
+    var $minSalaryInput = $("<input></input>")
+        .attr({type: "number", min: "0", placeholder: "Minimum salary"})
+        .addClass("mapboxgl-ctrl-input mapboxgl-ctrl--min-salary-input");
+
+    var $distanceSlider = $("<div>").addClass("mapboxgl-ctrl distanceSliderContainer").append(
+        $("<label style='color:white'>Distance Range</label>"),
+        $('<input type="text" id="distanceAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">'),
+        $("<div id='distanceSlider-range'></div>")
+        );
+    
+    
+    
+    $(".mapboxgl-ctrl-top-left").append(
+        $("<div>").addClass("mapboxgl-ctrl mapboxgl-ctrl--job-search-filters").append(
+            $minSalaryInput, $distanceSlider
+        ));
+    }
+
+buildSearchInputs();
+$( function() {
+    $( "#distanceSlider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 10000,
+      values: [ 0, 2000 ],
+      slide: function( event, ui ) {
+        $( "#distanceAmount" ).val( ui.values[ 0 ] + " km - " + ui.values[ 1 ] +"km" );
+      }
+    });
+    $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
+      " km -" + $( "#distanceSlider-range" ).slider( "values", 1 ) + "km" );
+  } );
 
