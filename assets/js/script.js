@@ -63,29 +63,30 @@ map.addControl(
     }
     ), 'top-left');
 
+//No longer in use now in index.html in sidebar-content
+// function buildSearchInputs(){
+//     var $minSalaryInput = $("<input></input>")
+//         .attr({type: "number", min: "0", placeholder: "Minimum salary"})
+//         .addClass("mapboxgl-ctrl-input mapboxgl-ctrl--min-salary-input");
 
-function buildSearchInputs(){
-    var $minSalaryInput = $("<input></input>")
-        .attr({type: "number", min: "0", placeholder: "Minimum salary"})
-        .addClass("mapboxgl-ctrl-input mapboxgl-ctrl--min-salary-input");
-
-    var $distanceSlider = $("<div>").addClass("mapboxgl-ctrl distanceSliderContainer").append(
-        $("<label style='color:white'>Distance Range</label>"),
-        $("<div class='distance-input-box-container'>").append(
-        $('<input type="text" id="minDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">'),
-        $('<input type="text" id="maxDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">')),
-        $("<div id='distanceSlider-range'></div>")
-        );
+//     var $distanceSlider = $("<div>").addClass("mapboxgl-ctrl distanceSliderContainer").append(
+//         $("<label style='color:white'>Distance Range</label>"),
+//         $("<div class='distance-input-box-container'>").append(
+//         $('<input type="text" id="minDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">'),
+//         $('<input type="text" id="maxDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">')),
+//         $("<div id='distanceSlider-range'></div>")
+//         );
     
     
     
-    $(".mapboxgl-ctrl-top-left").append(
-        $("<div>").addClass("mapboxgl-ctrl mapboxgl-ctrl--job-search-filters").append(
-            $minSalaryInput, $distanceSlider
-        ));
-    }
+//     $(".sidebar-content").append(
+//         $("<div>").attr({id: "mapboxgl-ctrl--job-search-filters"})
+//         .addClass("mapboxgl-ctrl").append(
+//             $minSalaryInput, $distanceSlider
+//         ));
+//     }
 
-buildSearchInputs();
+// buildSearchInputs();
 $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
