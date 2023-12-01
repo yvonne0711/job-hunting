@@ -42,7 +42,9 @@ function buildSearchInputs(){
 
     var $distanceSlider = $("<div>").addClass("mapboxgl-ctrl distanceSliderContainer").append(
         $("<label style='color:white'>Distance Range</label>"),
-        $('<input type="text" id="distanceAmount" readonly style="border:0; color:#f6931f; font-weight:bold;">'),
+        $("<div class='distance-input-box-container'>").append(
+        $('<input type="text" id="minDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">'),
+        $('<input type="text" id="maxDistanceAmount" style="border:0; color:#f6931f; font-weight:bold;">')),
         $("<div id='distanceSlider-range'></div>")
         );
     
@@ -60,12 +62,23 @@ $( function() {
       range: true,
       min: 0,
       max: 10000,
-      values: [ 0, 2000 ],
+      values: [ 0, 0 ],
       slide: function( event, ui ) {
-        $( "#distanceAmount" ).val( ui.values[ 0 ] + " km - " + ui.values[ 1 ] +"km" );
+        $( "#minDistanceAmount" ).val( ui.values[ 0 ] + " km");
+        $( "#maxDistanceAmount" ).val( ui.values[ 1 ] + " km");
       }
     });
     $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-      " km -" + $( "#distanceSlider-range" ).slider( "values", 1 ) + "km" );
+      " km -" + $( "#distanceSlider-range" ).slider( "values", 1 ) + " km" );
   } );
 
+
+//Updates the slider when a number is inputed, note: the user can currently select a minimum that is larger than the maximum 
+$("#minDistanceAmount").keyup(function () { 
+    $( "#distanceSlider-range" ).slider("values", 0, parseInt($(this).val()));
+});
+
+$("#maxDistanceAmount").keyup(function () { 
+    $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
+});
+ 
