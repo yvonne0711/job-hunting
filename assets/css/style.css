@@ -50,16 +50,16 @@ body,
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  width: 100%; /* Set the width to 100% */
-  height: 100%; /* Set the height to 100% */
+  width: 100%;
+  height: 100%; 
 }
 
 #distance-element {
-
+  margin-top: 70px;
 }
 
 #keywords-element {
-  margin-top: 70px;
+  margin-top: 30px;
 }
 
 #keywords-submit {
