@@ -99,7 +99,8 @@
                 />
               </div>
             </div>
-            <div class="distance-input-container row" id="third-elem">
+            <div>Distance</div>
+            <div class="distance-input-container row" id="distance-element">
               <div class="min-distance-input-container col">
                 <label class="row" for="minDistanceAmount">Min</label>
                 <input
@@ -120,22 +121,22 @@
               </div>
               <div class="row" id="distanceSlider-range"></div>
             </div>
-            <div class="keywords-input-container">
+            <div class="keywords-input-container" id="keywords-element">
               <label for="keywords">Enter keywords to filter by:</label>
               <input type="text" name="keywords" id="keywords-input" />
               <button
                 class="btn btn-primary"
-                id="keywords-sumbit"
+                id="keywords-submit"
                 type="submit"
               >
-                Sumbit
+                Submit
               </button>
               <ul id="keywords-list"></ul>
             </div>
-            <button class="btn btn-primary" type="submit">Search</button>
+            <button id="search-button" class="btn btn-primary" type="submit">Search</button>
             <button
               onclick="window.open('http://www.example.com', '_blank')"
-              id="fourth-elem"
+              id="about-button"
               type="button"
               class="btn btn-primary"
             >
