@@ -34,86 +34,53 @@
   </head>
 
   <body>
-    <!-- <div id="bringForward"> -->
-    <!-- <div id="map"></div>
-      <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
-        <div class="bg-dark p-4">
-          <h5 class="text-body-emphasis h4">Collapsed content</h5>
-          <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      Open Modal
+    </button>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>TEST</p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" class="btn btn-primary" id="saveButton">
+              Save
+            </button>
+          </div>
         </div>
       </div>
-      <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-          <button id="toggleBtn" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </nav>
-      </nav> -->
-    <!-- </div> -->
-
-    <!-- <div id="bringForward">
-      <div id="map"></div>
-      <div class="container">
-          <div class="col-xs-12 col-sm-12 col-md-12">
-              <br />
-              <br />
-               <h1 class="text-center">Ipsum Lorum</h1>
-  
-              <br />
-              <br />
-          </div>
-          <div class="row text-center">
-              <div class="col-xs-12 col-md-4"> <address>
-                      <strong><abbr title="Telefono">T:</abbr> 777777777</strong>
-                  </address>
-  
-              </div>
-              <div class="col-xs-12 col-md-4"> <address>
-                      <strong>
-                          <abbr title="Mail">M:</abbr>
-                          <a href="mailto:#">info@example.com</a>
-                  </strong>
-                  </address>
-  
-              </div>
-              <div class="col-xs-12 col-md-4"> <address>
-                      <strong><abbr title="Address">D:</abbr> Ipsum Lorum </strong>
-                  </address>
-  
-              </div>
-          </div>
-      </div>
-  </div> -->
-    <!-- <div class="collapse sidebar" id="navbarToggleExternalContent" data-bs-theme="dark">
-    <div class="bg-dark p-4">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-      <h5 class="text-body-emphasis h4">Collapsed content</h5>
-      <span class="text-body-secondary">Toggleable via the navbar brand.</span>
     </div>
-  </div>
 
-  <nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-      <button class="navbar-toggler" type="button" onclick="openNav();onclick=closeNav();" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </div>
-  </nav> -->
-
-    <!-- to work on -->
-    <!-- <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Clients</a>
-    <a href="#">Contact</a>
-  </div>
-  
-  <div id="main">
-    <button class="openbtn" onclick="openNav()">☰ Toggle Sidebar</button>  
-   <div id='map'></div>
-  </div> -->
     <!-- WORKING LEFT SIDEBAR USING MAPBOX -->
     <div id="map">
       <div id="left" class="sidebar flex-center left collapsed">
@@ -132,7 +99,7 @@
                 />
               </div>
             </div>
-            <div class="distance-input-container row">
+            <div class="distance-input-container row" id="third-elem">
               <div class="min-distance-input-container col">
                 <label class="row" for="minDistanceAmount">Min</label>
                 <input
@@ -166,6 +133,29 @@
               <ul id="keywords-list"></ul>
             </div>
             <button class="btn btn-primary" type="submit">Search</button>
+            <button
+              onclick="window.open('http://www.example.com', '_blank')"
+              id="fourth-elem"
+              type="button"
+              class="btn btn-primary"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-info-circle"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+                ></path>
+                <path
+                  d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
+                ></path>
+              </svg>
+              About
+            </button>
           </form>
 
           <div
@@ -177,6 +167,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jquery link -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <!-- jquery UI link -->
