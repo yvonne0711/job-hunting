@@ -94,12 +94,12 @@ $( function() {
       max: 10000,
       values: [ 0, 0 ],
       slide: function( event, ui ) {
-        $( "#minDistanceAmount" ).val( ui.values[ 0 ] + " km");
-        $( "#maxDistanceAmount" ).val( ui.values[ 1 ] + " km");
+        $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
+        $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
       }
     });
     $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-      " km -" + $( "#distanceSlider-range" ).slider( "values", 1 ) + " km" );
+      $( "#distanceSlider-range" ).slider( "values", 1 ) );
   } );
 
 

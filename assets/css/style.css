@@ -109,14 +109,16 @@ margin: 0px;
     height: 100%;
     }
 
-    .job-search-filters > *, .job-search-filters > * >* {
-      width: 100%;
-    }
-     
+   
     /* 
     The sidebar styling has them "expanded" by default, we use CSS transforms to push them offscreen
     The toggleSidebar() function removes this class from the element in order to expand it.
     */
+    .remove-arrows-num-input, .remove-arrows-num-input::-webkit-inner-spin-button, .remove-arrows-num-input::-webkit-outer-spin-button{
+      -moz-appearance: textfield;
+      -webkit-appearance: none;
+    }
+
      .left.collapsed {
     transform: translateX(-295px);
     }
@@ -125,6 +127,57 @@ margin: 0px;
     transform: translateX(295px);
     } 
 
+    .min-salary-input-container{
+      margin: 20px 0;
+      border: 1px solid red;
+   
+    }
+    
+    .min-salary-input{
+      border:none;
+      height: 30px;
+      width: 200px;
+    }
+    .currency{
+      width: fit-content;
+    }
+    .distance-input-container{
+      padding: 5px;
+      margin:5px;
+      font-size: medium;
+      background-color: whitesmoke;
+    }
+
+    .distance-input{
+      width: 50px;
+      max-height: 30px;
+      border: none;
+      background-color: inherit;
+    }
+
+    #distanceSlider-range{
+      margin: 10px;
+    }
+    #distanceSlider-range .ui-slider-handle{
+      outline: 0;
+      border: none;
+      background: cornflowerblue;
+      border-radius: 50%;
+      height:25px;
+      width: 25px;
+      top: -0.6rem;
+    }
+    #distanceSlider-range.ui-slider-horizontal {
+      top: .2em;
+      left: 5%;
+      height: .1em;
+      width: 90%;
+      border: none;
+      background: cornflowerblue;
+    }
+    #distanceSlider-range .ui-slider-range{
+      background: navy;
+    }
 
     /* to work on */
 /* 

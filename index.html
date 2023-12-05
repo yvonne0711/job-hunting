@@ -115,21 +115,40 @@
     <div id="map">
       <div id="left" class="sidebar flex-center left collapsed">
         <div class="sidebar-content rounded-rect flex-center">
-          <div class="job-search-filters sidebar-content">
-            <input
-              type="number"
-              placeholder="Minimum salary"
-              name="min-salary"
-              class="min-salary-input"
-            />
-
-            <div class="distance-input-container">
-              <label>Distance Range (km)</label>
-              <input type="text" name="" id="minDistanceAmount" />
-              <input type="text" name="" id="maxDistanceAmount" />
-              <div id="distanceSlider-range"></div>
+          <form class="job-search-filters sidebar-content overflow-hidden">
+            <label for="min-salary">Minimum Salary</label>
+            <div class="min-salary-input-container">
+              <span class="currency">£</span
+              ><input
+                type="number"
+                placeholder="30 000"
+                min="0"
+                name="min-salary"
+                class="min-salary-input remove-arrows-num-input"
+              />
             </div>
-          </div>
+            <div class="distance-input-container row">
+              <div class="min-distance-input-container col">
+                <label for="minDistanceAmount">Min</label>
+                <input
+                  type="text"
+                  class="distance-input"
+                  id="minDistanceAmount"
+                />
+                <span class="distanceUnit">km</span>
+              </div>
+              <div class="max-distance-input-container col">
+                <label for="maxDistanceAmount">Max</label>
+                <input
+                  type="text"
+                  class="distance-input"
+                  id="maxDistanceAmount"
+                />
+                <span class="distanceUnit">km</span>
+              </div>
+              <div class="row" id="distanceSlider-range"></div>
+            </div>
+          </form>
 
           <div
             class="sidebar-toggle rounded-rect left"
@@ -142,11 +161,11 @@
     </div>
     <!-- jquery link -->
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <<<<<<< HEAD
+    <!-- jquery UI link -->
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    =======
+
     <!-- mapbox api link -->
-    >>>>>>> 0e36db2d2156f7a2644e60711af76825ebfec64e
+
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.0/mapbox-gl.js"></script>
     <!-- api keys link -->
