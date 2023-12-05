@@ -29,6 +29,7 @@ const map = new mapboxgl.Map({
         // Add or remove the 'collapsed' CSS class from the sidebar element.
         // Returns boolean "true" or "false" whether 'collapsed' is in the class list.
         const collapsed = elem.classList.toggle('collapsed');
+        $(".map-place-search").toggle("hide")
         const padding = {};
         // 'id' is 'right' or 'left'. When run at start, this object looks like: '{left: 300}';
         padding[id] = collapsed ? 0 : 300; // 0 if collapsed, 300 px if not. This matches the width of the sidebars in the .sidebar CSS class.
@@ -55,14 +56,16 @@ const map = new mapboxgl.Map({
     //   }
   
 //search functionality
-map.addControl(
-    new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        countries: 'gb', //limits search to the UK
-        mapboxgl: mapboxgl,
-    }
-    ), 'top-left');
+const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    countries: 'gb', //limits search to the UK
+    mapboxgl: mapboxgl,
+})
+map.addControl(geocoder, 'top-left');
+$(".mapboxgl-ctrl-geocoder").addClass("map-place-search");
 
+
+$(".job-search-filters").prepend(geocoder.onAdd(map));
 //No longer in use now in index.html in sidebar-content
 // function buildSearchInputs(){
 //     var $minSalaryInput = $("<input></input>")
@@ -111,4 +114,33 @@ $("#minDistanceAmount").keyup(function () {
 $("#maxDistanceAmount").keyup(function () { 
     $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
 });
- 
+
+function addKeyword(){
+    var keywordInput = $("#keywords-input").val().trim()
+    $("#keywords-input").val("");
+    if( keywordInput != ""){
+        var $li = $("<li>").addClass("row").append(
+            $("<p>").text(keywordInput).addClass("keyword col").append(
+            $("<button>").addClass("delete-keyword btn btn-danger col").text("-")) 
+            );
+        $("#keywords-list").prepend($li);
+
+    }
+}
+
+$("#keywords-input").keydown(function(event){
+    if(event.keyCode == 13) {
+        event.preventDefault();
+        addKeyword();
+        return false;
+    }
+})
+$("#keywords-sumbit").on("click", function(event){
+    event.preventDefault();
+    addKeyword();
+})
+
+$("#keywords-list").on("click", ".delete-keyword", function(event){
+    event.preventDefault();
+    $(this).closest("li").remove();
+})

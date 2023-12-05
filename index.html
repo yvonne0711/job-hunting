@@ -119,20 +119,22 @@
       <div id="left" class="sidebar flex-center left collapsed">
         <div class="sidebar-content rounded-rect flex-center">
           <form class="job-search-filters sidebar-content overflow-hidden">
-            <label for="min-salary">Minimum Salary</label>
-            <div class="min-salary-input-container">
-              <span class="currency">£</span
-              ><input
-                type="number"
-                placeholder="30 000"
-                min="0"
-                name="min-salary"
-                class="min-salary-input remove-arrows-num-input"
-              />
+            <div class="min-salary-container">
+              <label for="min-salary row">Minimum Salary</label>
+              <div class="min-salary-input-container">
+                <span class="currency">£</span
+                ><input
+                  type="number"
+                  placeholder="30 000"
+                  min="0"
+                  name="min-salary"
+                  class="min-salary-input remove-arrows-num-input"
+                />
+              </div>
             </div>
             <div class="distance-input-container row">
               <div class="min-distance-input-container col">
-                <label for="minDistanceAmount">Min</label>
+                <label class="row" for="minDistanceAmount">Min</label>
                 <input
                   type="text"
                   class="distance-input"
@@ -141,7 +143,7 @@
                 <span class="distanceUnit">km</span>
               </div>
               <div class="max-distance-input-container col">
-                <label for="maxDistanceAmount">Max</label>
+                <label class="row" for="maxDistanceAmount">Max</label>
                 <input
                   type="text"
                   class="distance-input"
@@ -151,6 +153,19 @@
               </div>
               <div class="row" id="distanceSlider-range"></div>
             </div>
+            <div class="keywords-input-container">
+              <label for="keywords">Enter keywords to filter by:</label>
+              <input type="text" name="keywords" id="keywords-input" />
+              <button
+                class="btn btn-primary"
+                id="keywords-sumbit"
+                type="submit"
+              >
+                Sumbit
+              </button>
+              <ul id="keywords-list"></ul>
+            </div>
+            <button class="btn btn-primary" type="submit">Search</button>
           </form>
 
           <div
