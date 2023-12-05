@@ -128,7 +128,7 @@ $("#keywords-input").keydown(function(event){
         return false;
     }
 })
-$("#keywords-sumbit").on("click", function(event){
+$("#keywords-submit").on("click", function(event){
     event.preventDefault();
     addKeyword();
 })
