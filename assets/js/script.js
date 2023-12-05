@@ -81,56 +81,42 @@ map.addControl(
 //     }
 
 // buildSearchInputs();
-// $( function() {
-//     $( "#distanceSlider-range" ).slider({
-//       range: true,
-//       min: 0,
-//       max: 10000,
-//       values: [ 0, 0 ],
-//       slide: function( event, ui ) {
-//         $( "#minDistanceAmount" ).val( ui.values[ 0 ] + " km");
-//         $( "#maxDistanceAmount" ).val( ui.values[ 1 ] + " km");
-//       }
-//     });
-//     $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-//       " km -" + $( "#distanceSlider-range" ).slider( "values", 1 ) + " km" );
-//   } );
+$( function() {
+    $( "#distanceSlider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 10000,
+      values: [ 0, 0 ],
+      slide: function( event, ui ) {
+        $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
+        $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
+      }
+    });
+    $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
+      $( "#distanceSlider-range" ).slider( "values", 1 ) );
+  } );
 
 
 //Updates the slider when a number is inputed, note: the user can currently select a minimum that is larger than the maximum 
-// $("#minDistanceAmount").keyup(function () { 
-//     $( "#distanceSlider-range" ).slider("values", 0, parseInt($(this).val()));
-// });
+$("#minDistanceAmount").keyup(function () { 
+    $( "#distanceSlider-range" ).slider("values", 0, parseInt($(this).val()));
+});
 
-// $("#maxDistanceAmount").keyup(function () { 
-//     $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
-// });
- 
-const distanceSlider = document.getElementById('distanceSlider');
-const minDistanceAmount = document.getElementById('minDistanceAmount');
-const maxDistanceAmount = document.getElementById('maxDistanceAmount');
-
-distanceSlider.addEventListener('input', updateSliderValues);
-
-function updateSliderValues() {
-    const minValue = distanceSlider.value;
-    const maxValue = distanceSlider.max;
-    minDistanceAmount.textContent = `${minValue} km`;
-    maxDistanceAmount.textContent = `${maxValue} km`;
-}
-
+$("#maxDistanceAmount").keyup(function () { 
+    $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
+});
 
 // modal 
 
-var apiKey1 = localStorage.getItem("apikey1");
+// var apiKey1 = localStorage.getItem("apikey1");
 
-if (!apiKey1) {
-    apiKey1 = prompt("Please enter your API key for Google. This will be saved to local storage");
-    localStorage.setItem("apikey1", apiKey1);
-}
+// if (!apiKey1) {
+//     apiKey1 = prompt("Please enter your API key for Google. This will be saved to local storage");
+//     localStorage.setItem("apikey1", apiKey1);
+// }
 
-alert("I found your api key!");
-alert(apiKey1);
+// alert("I found your api key!");
+// alert(apiKey1);
 
 // Handle save button click
 document.getElementById('saveButton').addEventListener('click', function() {
