@@ -1,9 +1,39 @@
-fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey)
-.then(function(response){
-    return response.json()
-}).then(function(data){
-    console.log(data);
+var selectedCity = "";
+
+// + "&distance=" + distanceMax+ "&salary_min=" + salaryMin
+function fetchJobData(selectedCity) {
+fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey+ "&what=web%20developer&where=" + selectedCity)
+.then(function (response) {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
 })
+.then(function (data) {
+    console.log(data); 
+    // Process the job data and create markers on the map
+    displayJobMarkers(data.results);
+    
+})
+.catch(function (error) {
+    console.error('Error fetching job data:', error);
+});
+}
+
+function displayJobMarkers(jobResults) {
+// Clear existing markers on the map
+
+
+// Loop through job results and create markers
+jobResults.forEach(function (job) {
+const marker = new mapboxgl.Marker()
+    .setLngLat([~~job.longitude, ~~job.latitude]) // Make sure to use the correct coordinates
+    .setPopup(new mapboxgl.Popup().setHTML(`<h3>${job.title}</h3><p>${job.description}</p>`))
+    .addTo(map);
+    console.log(job.longitude, job.latitude)
+});
+}
+
 
 
 
@@ -41,6 +71,7 @@ const map = new mapboxgl.Map({
          
         map.on('load', () => {
         toggleSidebar('left');
+        
         });
 
         // to work on
@@ -55,13 +86,38 @@ const map = new mapboxgl.Map({
     //   }
   
 //search functionality
-map.addControl(
-    new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        countries: 'gb', //limits search to the UK
-        mapboxgl: mapboxgl,
-    }
-    ), 'top-left');
+ // Add an event listener to the geocoder control
+ const geocoder = new MapboxGeocoder({
+    accessToken: mapboxgl.accessToken,
+    countries: 'gb',
+    mapboxgl: mapboxgl,
+}).on('result', function({ result }) { selectedCity = result.place_name.split(",")[0] });
+
+
+map.addControl(geocoder, 'top-left');
+
+// Access the geocoder input field
+const geocoderInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+
+// Add an event listener to detect changes in the input field
+geocoderInput.addEventListener('input', function () {
+    // Retrieve the current value of the input field
+    var  inputValue = geocoderInput.value;
+    // save the value and use it on the job api
+    selectedCity = inputValue;
+    
+    
+});
+
+var searchBtn = document.querySelector("#search");
+
+searchBtn.addEventListener("click" , function (event) {
+    event.preventDefault();
+    fetchJobData(selectedCity);
+
+});
+
+
 
 //No longer in use now in index.html in sidebar-content
 // function buildSearchInputs(){
@@ -87,6 +143,7 @@ map.addControl(
 //     }
 
 // buildSearchInputs();
+
 $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
@@ -111,4 +168,4 @@ $("#minDistanceAmount").keyup(function () {
 $("#maxDistanceAmount").keyup(function () { 
     $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
 });
- 
+
