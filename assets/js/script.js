@@ -137,19 +137,49 @@ $("#keywords-list").on("click", ".delete-keyword", function(event){
     event.preventDefault();
     $(this).closest("li").remove();
 })
+
+
 // modal 
+document.addEventListener("DOMContentLoaded", function () {
+  // Event listener for the button that triggers the modal
+  document.getElementById("openModalButton").addEventListener("click", function () {
+    // Show the modal
+    $("#apiKeyModal").modal("show");
+  });
 
-// var apiKey1 = localStorage.getItem("apikey1");
+  // Event listener for the Save button in the modal
+  document.getElementById("saveApiKeyButton").addEventListener("click", function () {
+    // Get user-entered API keys
+    const enteredAdzunaApiKey = document.getElementById("apiKey1").value;
+    const enteredAdzunaApiID = document.getElementById("apiKey2").value;
+    const enteredMapboxApiKey = document.getElementById("apiKey3").value;
 
-// if (!apiKey1) {
-//     apiKey1 = prompt("Please enter your API key for Google. This will be saved to local storage");
-//     localStorage.setItem("apikey1", apiKey1);
-// }
+    // Check if entered API keys are correct
+    if (
+      enteredAdzunaApiKey === adzunaApiKey &&
+      enteredAdzunaApiID === adzunaApiID &&
+      enteredMapboxApiKey === mapboxApiKey
+    ) {
+      // Save API keys in localStorage
+      localStorage.setItem("adzunaApiKey", enteredAdzunaApiKey);
+      localStorage.setItem("adzunaApiID", enteredAdzunaApiID);
+      localStorage.setItem("mapboxApiKey", enteredMapboxApiKey);
 
-// alert("I found your api key!");
-// alert(apiKey1);
+      // Show the application content
+      showApplicationContent();
+    } else {
+      // API keys are incorrect, prompt the user to retry
+      alert("Incorrect API keys. Please retry.");
+    }
+  });
 
-// Handle save button click
-document.getElementById('saveButton').addEventListener('click', function() {
-  console.log('Save button clicked!');
+  function showApplicationContent() {
+    // Your code to reveal the rest of the application content goes here
+    // For example, make a container visible or load additional content
+  const applicationContent = document.getElementById('applicationContent');
+  applicationContent.classList.remove('hide');
+
+    // Close the modal
+    $("#apiKeyModal").modal("hide");
+  };
 });
