@@ -47,6 +47,10 @@ function toggleSidebar(id) {
   });
 }
 
+map.on("load", () => {
+  toggleSidebar("left");
+});
+
 //search functionality
 const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
