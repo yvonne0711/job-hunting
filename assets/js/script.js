@@ -137,19 +137,4 @@ $("#keywords-list").on("click", ".delete-keyword", function(event){
     event.preventDefault();
     $(this).closest("li").remove();
 })
-// modal 
 
-// var apiKey1 = localStorage.getItem("apikey1");
-
-// if (!apiKey1) {
-//     apiKey1 = prompt("Please enter your API key for Google. This will be saved to local storage");
-//     localStorage.setItem("apikey1", apiKey1);
-// }
-
-// alert("I found your api key!");
-// alert(apiKey1);
-
-// Handle save button click
-document.getElementById('saveButton').addEventListener('click', function() {
-  console.log('Save button clicked!');
-});
