@@ -1,4 +1,6 @@
-var centerOfSearch = [null, null];
+var citySearched;
+var centerOfSearch;
+
 
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
@@ -111,8 +113,7 @@ $("#minDistanceAmount").keyup(function () {
 $("#maxDistanceAmount").keyup(function () { 
     $("#distanceSlider-range").slider("values", 1, parseInt($(this).val()));
 });
-function addKeyword(){
-    var keywordInput = $("#keywords-input").val().trim()
+function addKeyword(keywordInput){
     $("#keywords-input").val("");
     if( keywordInput != ""){
         var $li = $("<li>").addClass("row").append(
@@ -127,13 +128,14 @@ function addKeyword(){
 $("#keywords-input").keydown(function(event){
     if(event.keyCode == 13) {
         event.preventDefault();
-        addKeyword();
+        addKeyword($("#keywords-input").val().trim());
         return false;
     }
 })
 $("#keywords-submit").on("click", function(event){
     event.preventDefault();
-    addKeyword();
+    addKeyword($("#keywords-input").val().trim());
+    getKeywords();
 })
 
 $("#keywords-list").on("click", ".delete-keyword", function(event){
@@ -159,9 +161,6 @@ document.getElementById('saveButton').addEventListener('click', function() {
 
 
 
-geocoder.on('result', function(e) {
-  centerOfSearch = e.result.center;
-})
 
 
 
@@ -209,4 +208,49 @@ $("#search-button").on("click", function(event){
     map.removeSource('radius');
   }
   createRadiusCircle(centerOfSearch ,$("#maxDistanceAmount").val());
+});
+
+geocoder.on('result', function(e) {
+   citySearched = e.result.place_name;
+   centerOfSearch = e.result.center;
+   
+
 })
+
+function getKeywords(){
+  var array = [];
+  $("#keywords-list").children('li').each(function(){
+    array.push($(this).children('p').text().slice(0, -1));
+  });
+  return array;
+}
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  var storageObj = {
+    "placeName": citySearched,
+    "centerOfPlace": centerOfSearch,
+    "minSalary": $(".min-salary-input").val(),
+    "minDistance": $("#minDistanceAmount").val(),
+    "maxDistance": $("#maxDistanceAmount").val(),
+    "keywords": JSON.stringify(getKeywords()),
+  }
+  localStorage.setItem("searchSettings", JSON.stringify(storageObj));
+})
+
+function getStoredSearchSettings() {  
+  var obj = localStorage.getItem("searchSettings");
+  obj = JSON.parse(obj);
+  obj.keywords = JSON.parse(obj.keywords);
+  geocoder.setInput(obj.placeName);
+  $(".min-salary-input").val(obj.minSalary);
+  $("#minDistanceAmount").val(obj.minDistance);
+  $("#maxDistanceAmount").val(obj.maxDistance);
+  obj.keywords.reverse().forEach(function(keyword){
+    addKeyword(keyword);
+  });
+}
+
+
+
+getStoredSearchSettings();
