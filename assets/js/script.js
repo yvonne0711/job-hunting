@@ -1,3 +1,58 @@
+// modal 
+//load DOM content first
+document.addEventListener("DOMContentLoaded", function () {
+  const apiKey1 = localStorage.getItem("adzunaApiKey");
+  const apiKey2 = localStorage.getItem("adzunaApiID");
+  const apiKey3 = localStorage.getItem("mapboxApiKey");
+
+  if (!apiKey1 || !apiKey2 || !apiKey3) {
+    $("#apiKeyModal").modal('show')
+    // Show the API key modal if any key is not present in local storage
+    $("#apiKeyModal").modal({ backdrop: 'static', keyboard: false });
+
+    // Add an event listener for the Save API Key button in the modal
+    document.getElementById("saveApiKeyButton").addEventListener("click", function () {
+      // Save API keys to local storage
+      saveApiKeys();
+
+      // Check if the entered keys match the ones in api.js
+      if (correctApiKeys()) {
+        // Close the modal if keys are validated
+        $("#apiKeyModal").modal("hide");
+      } else {
+          // Display an error or take appropriate action if keys don't match
+          alert("Invalid API keys. Please enter valid keys.");
+      }
+    });
+  }
+});
+
+// Function to validate API keys
+function correctApiKeys() {
+  const enteredApiKey1 = document.getElementById("apiKey1").value;
+  const enteredApiKey2 = document.getElementById("apiKey2").value;
+  const enteredApiKey3 = document.getElementById("apiKey3").value;
+
+  // Compare entered keys with the ones in api.js
+  return (
+    enteredApiKey1 === adzunaApiKey &&
+    enteredApiKey2 === adzunaApiID &&
+    enteredApiKey3 === mapboxApiKey
+  );
+}
+
+// Function to save API keys to local storage
+function saveApiKeys() {
+  const apiKey1 = document.getElementById("apiKey1").value;
+  const apiKey2 = document.getElementById("apiKey2").value;
+  const apiKey3 = document.getElementById("apiKey3").value;
+
+  localStorage.setItem("adzunaApiKey", apiKey1);
+  localStorage.setItem("adzunaApiID", apiKey2);
+  localStorage.setItem("mapboxApiKey", apiKey3);
+}
+
+
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
     adzunaApiID +
@@ -139,47 +194,3 @@ $("#keywords-list").on("click", ".delete-keyword", function(event){
 })
 
 
-// modal 
-document.addEventListener("DOMContentLoaded", function () {
-  // Event listener for the button that triggers the modal
-  document.getElementById("openModalButton").addEventListener("click", function () {
-    // Show the modal
-    $("#apiKeyModal").modal("show");
-  });
-
-  // Event listener for the Save button in the modal
-  document.getElementById("saveApiKeyButton").addEventListener("click", function () {
-    // Get user-entered API keys
-    const enteredAdzunaApiKey = document.getElementById("apiKey1").value;
-    const enteredAdzunaApiID = document.getElementById("apiKey2").value;
-    const enteredMapboxApiKey = document.getElementById("apiKey3").value;
-
-    // Check if entered API keys are correct
-    if (
-      enteredAdzunaApiKey === adzunaApiKey &&
-      enteredAdzunaApiID === adzunaApiID &&
-      enteredMapboxApiKey === mapboxApiKey
-    ) {
-      // Save API keys in localStorage
-      localStorage.setItem("adzunaApiKey", enteredAdzunaApiKey);
-      localStorage.setItem("adzunaApiID", enteredAdzunaApiID);
-      localStorage.setItem("mapboxApiKey", enteredMapboxApiKey);
-
-      // Show the application content
-      showApplicationContent();
-    } else {
-      // API keys are incorrect, prompt the user to retry
-      alert("Incorrect API keys. Please retry.");
-    }
-  });
-
-  function showApplicationContent() {
-    // Your code to reveal the rest of the application content goes here
-    // For example, make a container visible or load additional content
-  const applicationContent = document.getElementById('applicationContent');
-  applicationContent.classList.remove('hide');
-
-    // Close the modal
-    $("#apiKeyModal").modal("hide");
-  };
-});

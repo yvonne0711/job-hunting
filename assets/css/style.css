@@ -216,3 +216,7 @@ body,
 .min-salary-input-container input {
   padding: 2px;
 }
+
+.modal {
+  z-index: 1050; 
+}
