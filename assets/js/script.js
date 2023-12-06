@@ -52,6 +52,9 @@ function saveApiKeys() {
   localStorage.setItem("mapboxApiKey", apiKey3);
 }
 
+var citySearched;
+var centerOfSearch;
+
 
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
@@ -143,15 +146,16 @@ $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
       min: 0,
-      max: 10000,
-      values: [ 0, 0 ],
+      max: 1000,
+      values: [ 0, 10000 ],
       slide: function( event, ui ) {
         $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
         $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
       }
     });
-    $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-      $( "#distanceSlider-range" ).slider( "values", 1 ) );
+    $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
+    $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
+     
   } );
 
 
@@ -161,10 +165,9 @@ $("#minDistanceAmount").keyup(function () {
 });
 
 $("#maxDistanceAmount").keyup(function () { 
-    $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
+    $("#distanceSlider-range").slider("values", 1, parseInt($(this).val()));
 });
-function addKeyword(){
-    var keywordInput = $("#keywords-input").val().trim()
+function addKeyword(keywordInput){
     $("#keywords-input").val("");
     if( keywordInput != ""){
         var $li = $("<li>").addClass("row").append(
@@ -179,13 +182,14 @@ function addKeyword(){
 $("#keywords-input").keydown(function(event){
     if(event.keyCode == 13) {
         event.preventDefault();
-        addKeyword();
+        addKeyword($("#keywords-input").val().trim());
         return false;
     }
 })
 $("#keywords-submit").on("click", function(event){
     event.preventDefault();
-    addKeyword();
+    addKeyword($("#keywords-input").val().trim());
+    getKeywords();
 })
 
 $("#keywords-list").on("click", ".delete-keyword", function(event){
@@ -194,3 +198,93 @@ $("#keywords-list").on("click", ".delete-keyword", function(event){
 })
 
 
+
+function createRadiusCircle(center, radiusKm){
+
+  const metersToPixelsAtMaxZoom = (meters, latitude) =>
+    meters / 0.075 / Math.cos(latitude * Math.PI / 180);
+
+    map.addSource('radius', {
+      'type': 'geojson',
+      'data': {
+      'type': 'Feature',
+      'geometry': {
+      'type': 'Point',
+      'coordinates': center,
+      }
+      }}
+      );
+     
+      
+      map.addLayer({
+      'id': 'radius',
+      'type': 'circle',
+      'source': 'radius',
+      'paint': {
+        "circle-radius": {
+          'stops': [
+            [0, 0],
+            [20, metersToPixelsAtMaxZoom(radiusKm*1000, center[1])]
+          ],
+          'base': 2
+        },
+      'circle-color': '#B42222',
+      'circle-opacity': 0.6,
+      },
+      'filter': ['==', '$type', 'Point']
+      });
+      }
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  if(map.getSource('radius')){
+    map.removeLayer('radius');
+    map.removeSource('radius');
+  }
+  createRadiusCircle(centerOfSearch ,$("#maxDistanceAmount").val());
+});
+
+geocoder.on('result', function(e) {
+   citySearched = e.result.place_name;
+   centerOfSearch = e.result.center;
+   
+
+})
+
+function getKeywords(){
+  var array = [];
+  $("#keywords-list").children('li').each(function(){
+    array.push($(this).children('p').text().slice(0, -1));
+  });
+  return array;
+}
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  var storageObj = {
+    "placeName": citySearched,
+    "centerOfPlace": centerOfSearch,
+    "minSalary": $(".min-salary-input").val(),
+    "minDistance": $("#minDistanceAmount").val(),
+    "maxDistance": $("#maxDistanceAmount").val(),
+    "keywords": JSON.stringify(getKeywords()),
+  }
+  localStorage.setItem("searchSettings", JSON.stringify(storageObj));
+})
+
+function getStoredSearchSettings() {  
+  var obj = localStorage.getItem("searchSettings");
+  obj = JSON.parse(obj);
+  obj.keywords = JSON.parse(obj.keywords);
+  geocoder.setInput(obj.placeName);
+  $(".min-salary-input").val(obj.minSalary);
+  $("#minDistanceAmount").val(obj.minDistance);
+  $("#maxDistanceAmount").val(obj.maxDistance);
+  obj.keywords.reverse().forEach(function(keyword){
+    addKeyword(keyword);
+  });
+}
+
+
+
+getStoredSearchSettings();
