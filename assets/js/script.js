@@ -1,3 +1,5 @@
+var centerOfSearch = [null, null];
+
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
     adzunaApiID +
@@ -88,15 +90,16 @@ $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
       min: 0,
-      max: 10000,
-      values: [ 0, 0 ],
+      max: 1000,
+      values: [ 0, 10000 ],
       slide: function( event, ui ) {
         $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
         $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
       }
     });
-    $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-      $( "#distanceSlider-range" ).slider( "values", 1 ) );
+    $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
+    $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
+     
   } );
 
 
@@ -106,7 +109,7 @@ $("#minDistanceAmount").keyup(function () {
 });
 
 $("#maxDistanceAmount").keyup(function () { 
-    $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
+    $("#distanceSlider-range").slider("values", 1, parseInt($(this).val()));
 });
 function addKeyword(){
     var keywordInput = $("#keywords-input").val().trim()
@@ -137,4 +140,73 @@ $("#keywords-list").on("click", ".delete-keyword", function(event){
     event.preventDefault();
     $(this).closest("li").remove();
 })
+// modal 
 
+// var apiKey1 = localStorage.getItem("apikey1");
+
+// if (!apiKey1) {
+//     apiKey1 = prompt("Please enter your API key for Google. This will be saved to local storage");
+//     localStorage.setItem("apikey1", apiKey1);
+// }
+
+// alert("I found your api key!");
+// alert(apiKey1);
+
+// Handle save button click
+document.getElementById('saveButton').addEventListener('click', function() {
+  console.log('Save button clicked!');
+});
+
+
+
+geocoder.on('result', function(e) {
+  centerOfSearch = e.result.center;
+})
+
+
+
+
+function createRadiusCircle(center, radiusKm){
+
+  const metersToPixelsAtMaxZoom = (meters, latitude) =>
+    meters / 0.075 / Math.cos(latitude * Math.PI / 180);
+
+    map.addSource('radius', {
+      'type': 'geojson',
+      'data': {
+      'type': 'Feature',
+      'geometry': {
+      'type': 'Point',
+      'coordinates': center,
+      }
+      }}
+      );
+     
+      
+      map.addLayer({
+      'id': 'radius',
+      'type': 'circle',
+      'source': 'radius',
+      'paint': {
+        "circle-radius": {
+          'stops': [
+            [0, 0],
+            [20, metersToPixelsAtMaxZoom(radiusKm*1000, center[1])]
+          ],
+          'base': 2
+        },
+      'circle-color': '#B42222',
+      'circle-opacity': 0.6,
+      },
+      'filter': ['==', '$type', 'Point']
+      });
+      }
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  if(map.getSource('radius')){
+    map.removeLayer('radius');
+    map.removeSource('radius');
+  }
+  createRadiusCircle(centerOfSearch ,$("#maxDistanceAmount").val());
+})
