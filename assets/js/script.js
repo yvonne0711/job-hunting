@@ -92,8 +92,8 @@ fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app
 .catch(function (error) {
     console.error('Error fetching job data:', error);
 });
-    distanceMax = document.querySelector("#maxDistanceAmount").value = 0;;
-    salaryMin= document.querySelector("#salaryMin").value = 0;
+    distanceMax = document.querySelector("#maxDistanceAmount").value ;;
+    salaryMin= document.querySelector("#salaryMin").value ;
 }
 
 function displayJobMarkers(jobResults) {
@@ -172,11 +172,9 @@ map.on("load", () => {
 
 
 
-// Access the geocoder input field
-const geocoderInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
 
 // Add an event listener to detect changes in the input field
-geocoderInput.addEventListener('input', function () {
+geocoder.on('input', function () {
     // Retrieve the current value of the input field
     var  inputValue = geocoderInput.value;
     // save the value and use it on the job api
@@ -200,7 +198,6 @@ $(".job-search-filters").prepend(geocoder.onAdd(map));
 
 
 
-$(".job-search-filters").prepend(geocoder.onAdd(map));
 //No longer in use now in index.html in sidebar-content
 // function buildSearchInputs(){
 //     var $minSalaryInput = $("<input></input>")
