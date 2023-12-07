@@ -42,7 +42,12 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Enter API Keys</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -51,21 +56,48 @@
               <form id="apiKeyForm">
                 <div class="mb-3">
                   <label for="apiKey1" class="form-label">Adzuna API Key</label>
-                  <input type="text" class="form-control" id="apiKey1" required>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apiKey1"
+                    required
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="apiKey2" class="form-label">Adzuna API ID</label>
-                  <input type="text" class="form-control" id="apiKey2" required>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apiKey2"
+                    required
+                  />
                 </div>
                 <div class="mb-3">
                   <label for="apiKey3" class="form-label">Mapbox API Key</label>
-                  <input type="text" class="form-control" id="apiKey3" required>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apiKey3"
+                    required
+                  />
                 </div>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="saveApiKeyButton">Save</button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="saveApiKeyButton"
+              >
+                Save
+              </button>
             </div>
           </div>
         </div>
@@ -152,7 +184,21 @@
             class="sidebar-toggle rounded-rect left"
             onclick="toggleSidebar('left')"
           >
-            &rarr;
+            <!-- Here's the inline SVG icon -->
+            <svg
+              class="svg-icon search-icon"
+              aria-labelledby="title desc"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 19.9 19.7"
+            >
+              <title id="title">Search Icon</title>
+              <desc id="desc">A magnifying glass icon.</desc>
+              <g class="search-path" fill="none" stroke="#848F91">
+                <path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4" />
+                <circle cx="8" cy="8" r="7" />
+              </g>
+            </svg>
           </div>
         </div>
       </div>

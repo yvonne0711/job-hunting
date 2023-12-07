@@ -113,8 +113,7 @@ const geocoder = new MapboxGeocoder({
     countries: 'gb', //limits search to the UK
     mapboxgl: mapboxgl,
 })
-map.addControl(geocoder, 'top-left');
-$(".mapboxgl-ctrl-geocoder").addClass("map-place-search");
+
 
 
 $(".job-search-filters").prepend(geocoder.onAdd(map));
@@ -228,8 +227,8 @@ function createRadiusCircle(center, radiusKm){
           ],
           'base': 2
         },
-      'circle-color': '#B42222',
-      'circle-opacity': 0.6,
+      'circle-color': '#ADD8E6',
+      'circle-opacity': 0.2,
       },
       'filter': ['==', '$type', 'Point']
       });
