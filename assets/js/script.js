@@ -1,4 +1,4 @@
-// modal 
+//modal 
 //load DOM content first
 document.addEventListener("DOMContentLoaded", function () {
   const apiKey1 = localStorage.getItem("adzunaApiKey");
@@ -54,7 +54,7 @@ function saveApiKeys() {
 
 var citySearched;
 var centerOfSearch;
-
+var storedDistance = [0,1000];
 
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
@@ -68,6 +68,61 @@ fetch(
   .then(function (data) {
     console.log(data);
   });
+
+var selectedCity = "";
+var distanceMax = 0;
+var salaryMin = 0;
+var markers = [];
+
+function fetchJobData(selectedCity , distanceMax , salaryMin) {
+    clearMarkers();
+fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey+ "&what=web%20developer&results_per_page=50&where=" + selectedCity+ "&distance=" + Number(distanceMax)+ "&salary_min=" + Number(salaryMin))
+.then(function (response) {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+})
+.then(function (data) {
+    // console.log(data); 
+    // Process the job data and create markers on the map
+    displayJobMarkers(data.results);
+    
+})
+.catch(function (error) {
+    console.error('Error fetching job data:', error);
+});
+    distanceMax = document.querySelector("#maxDistanceAmount").value = 0;;
+    salaryMin= document.querySelector("#salaryMin").value = 0;
+}
+
+function displayJobMarkers(jobResults) {
+// Clear existing markers on the map
+clearMarkers();
+
+// Loop through job results and create markers
+jobResults.forEach(function (job) {
+    if (job.latitude !== undefined && job.longitude !== undefined) {
+        const marker = new mapboxgl.Marker()
+    .setLngLat([job.longitude, job.latitude]) // Make sure to use the correct coordinates
+    .setPopup(new mapboxgl.Popup().setHTML(`<h3>${job.title}</h3><p>${job.description}</p><a  target= "blank" href="${job.redirect_url}">Get More Info</a>`))
+    .addTo(map); 
+    markers.push(marker);       
+    }
+
+    // console.log(job.longitude, job.latitude)
+});
+}
+
+// function to clear markers
+
+function clearMarkers() {
+    markers.forEach(marker => marker.remove());
+
+    markers = [];
+}
+
+
 
 //Mapbox api code, Note for coordinates it's always [long, lat] unless stated otherwise
 mapboxgl.accessToken = mapboxApiKey;
@@ -108,11 +163,40 @@ map.on("load", () => {
 });
 
 //search functionality
-const geocoder = new MapboxGeocoder({
+ // Add an event listener to the geocoder control
+ const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
-    countries: 'gb', //limits search to the UK
+    countries: 'gb',
     mapboxgl: mapboxgl,
-})
+}).on('result', function({ result }) { selectedCity = result.place_name.split(",")[0] });
+
+
+
+// Access the geocoder input field
+const geocoderInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
+
+// Add an event listener to detect changes in the input field
+geocoderInput.addEventListener('input', function () {
+    // Retrieve the current value of the input field
+    var  inputValue = geocoderInput.value;
+    // save the value and use it on the job api
+    selectedCity = inputValue;
+    
+    
+});
+
+var searchBtn = document.querySelector("#search-button");
+
+searchBtn.addEventListener("click" , function (event) {
+    event.preventDefault();
+    distanceMax = document.querySelector("#maxDistanceAmount").value;
+    salaryMin= document.querySelector("#salaryMin").value;
+    fetchJobData(selectedCity , distanceMax , salaryMin);
+
+});
+
+
+$(".job-search-filters").prepend(geocoder.onAdd(map));
 
 
 
@@ -141,6 +225,7 @@ $(".job-search-filters").prepend(geocoder.onAdd(map));
 //     }
 
 // buildSearchInputs();
+
 $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
@@ -269,7 +354,7 @@ $("#search-button").on("click", function(event){
     "keywords": JSON.stringify(getKeywords()),
   }
   localStorage.setItem("searchSettings", JSON.stringify(storageObj));
-})
+});
 
 function getStoredSearchSettings() {  
   var obj = localStorage.getItem("searchSettings");
@@ -277,6 +362,7 @@ function getStoredSearchSettings() {
   obj.keywords = JSON.parse(obj.keywords);
   geocoder.setInput(obj.placeName);
   $(".min-salary-input").val(obj.minSalary);
+  storedDistance = [obj.minDistance, obj.maxDistance];
   $("#minDistanceAmount").val(obj.minDistance);
   $("#maxDistanceAmount").val(obj.maxDistance);
   obj.keywords.reverse().forEach(function(keyword){
@@ -285,5 +371,20 @@ function getStoredSearchSettings() {
 }
 
 
+$( function() {
+  $( "#distanceSlider-range" ).slider({
+    range: true,
+    min: 0,
+    max: 1000,
+    values: [ storedDistance[0], storedDistance[1]],
+    slide: function( event, ui ) {
+      $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
+      $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
+    }
+  });
+  $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
+  $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
+   
+} );
 
 getStoredSearchSettings();
