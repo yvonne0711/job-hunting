@@ -54,7 +54,7 @@ function saveApiKeys() {
 
 var citySearched;
 var centerOfSearch;
-
+var storedDistance = [0,1000];
 
 fetch(
   "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
@@ -142,21 +142,6 @@ $(".job-search-filters").prepend(geocoder.onAdd(map));
 //     }
 
 // buildSearchInputs();
-$( function() {
-    $( "#distanceSlider-range" ).slider({
-      range: true,
-      min: 0,
-      max: 1000,
-      values: [ 0, 10000 ],
-      slide: function( event, ui ) {
-        $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
-        $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
-      }
-    });
-    $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
-    $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
-     
-  } );
 
 
 //Updates the slider when a number is inputed, note: the user can currently select a minimum that is larger than the maximum 
@@ -270,7 +255,7 @@ $("#search-button").on("click", function(event){
     "keywords": JSON.stringify(getKeywords()),
   }
   localStorage.setItem("searchSettings", JSON.stringify(storageObj));
-})
+});
 
 function getStoredSearchSettings() {  
   var obj = localStorage.getItem("searchSettings");
@@ -278,6 +263,7 @@ function getStoredSearchSettings() {
   obj.keywords = JSON.parse(obj.keywords);
   geocoder.setInput(obj.placeName);
   $(".min-salary-input").val(obj.minSalary);
+  storedDistance = [obj.minDistance, obj.maxDistance];
   $("#minDistanceAmount").val(obj.minDistance);
   $("#maxDistanceAmount").val(obj.maxDistance);
   obj.keywords.reverse().forEach(function(keyword){
@@ -286,5 +272,20 @@ function getStoredSearchSettings() {
 }
 
 
+$( function() {
+  $( "#distanceSlider-range" ).slider({
+    range: true,
+    min: 0,
+    max: 1000,
+    values: [ storedDistance[0], storedDistance[1]],
+    slide: function( event, ui ) {
+      $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
+      $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
+    }
+  });
+  $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
+  $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
+   
+} );
 
 getStoredSearchSettings();
