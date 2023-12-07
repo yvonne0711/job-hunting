@@ -1,8 +1,11 @@
 var selectedCity = "";
+var distanceMax = 0;
+var salaryMin = 0;
+var markers = [];
 
-// + "&distance=" + distanceMax+ "&salary_min=" + salaryMin
-function fetchJobData(selectedCity) {
-fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey+ "&what=web%20developer&where=" + selectedCity)
+function fetchJobData(selectedCity , distanceMax , salaryMin) {
+    clearMarkers();
+fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey+ "&what=web%20developer&results_per_page=50&where=" + selectedCity+ "&distance=" + Number(distanceMax)+ "&salary_min=" + Number(salaryMin))
 .then(function (response) {
     if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -10,7 +13,7 @@ fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app
     return response.json();
 })
 .then(function (data) {
-    console.log(data); 
+    // console.log(data); 
     // Process the job data and create markers on the map
     displayJobMarkers(data.results);
     
@@ -18,20 +21,34 @@ fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app
 .catch(function (error) {
     console.error('Error fetching job data:', error);
 });
+    distanceMax = document.querySelector("#maxDistanceAmount").value = 0;;
+    salaryMin= document.querySelector("#salaryMin").value = 0;
 }
 
 function displayJobMarkers(jobResults) {
 // Clear existing markers on the map
-
+clearMarkers();
 
 // Loop through job results and create markers
 jobResults.forEach(function (job) {
-const marker = new mapboxgl.Marker()
-    .setLngLat([~~job.longitude, ~~job.latitude]) // Make sure to use the correct coordinates
-    .setPopup(new mapboxgl.Popup().setHTML(`<h3>${job.title}</h3><p>${job.description}</p>`))
-    .addTo(map);
-    console.log(job.longitude, job.latitude)
+    if (job.latitude !== undefined && job.longitude !== undefined) {
+        const marker = new mapboxgl.Marker()
+    .setLngLat([job.longitude, job.latitude]) // Make sure to use the correct coordinates
+    .setPopup(new mapboxgl.Popup().setHTML(`<h3>${job.title}</h3><p>${job.description}</p><a  target= "blank" href="${job.redirect_url}">Get More Info</a>`))
+    .addTo(map); 
+    markers.push(marker);       
+    }
+
+    // console.log(job.longitude, job.latitude)
 });
+}
+
+// function to clear markers
+
+function clearMarkers() {
+    markers.forEach(marker => marker.remove());
+
+    markers = [];
 }
 
 
@@ -113,7 +130,9 @@ var searchBtn = document.querySelector("#search");
 
 searchBtn.addEventListener("click" , function (event) {
     event.preventDefault();
-    fetchJobData(selectedCity);
+    distanceMax = document.querySelector("#maxDistanceAmount").value;
+    salaryMin= document.querySelector("#salaryMin").value;
+    fetchJobData(selectedCity , distanceMax , salaryMin);
 
 });
 
