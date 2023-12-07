@@ -92,8 +92,8 @@ fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app
 .catch(function (error) {
     console.error('Error fetching job data:', error);
 });
-    distanceMax = document.querySelector("#maxDistanceAmount").value = 0;;
-    salaryMin= document.querySelector("#salaryMin").value = 0;
+    distanceMax = document.querySelector("#maxDistanceAmount").value ;;
+    salaryMin= document.querySelector("#salaryMin").value ;
 }
 
 function displayJobMarkers(jobResults) {
@@ -171,13 +171,10 @@ map.on("load", () => {
 }).on('result', function({ result }) { selectedCity = result.place_name.split(",")[0] });
 
 
-map.addControl(geocoder, 'top-left');
 
-// Access the geocoder input field
-const geocoderInput = document.querySelector('.mapboxgl-ctrl-geocoder--input');
 
 // Add an event listener to detect changes in the input field
-geocoderInput.addEventListener('input', function () {
+geocoder.on('input', function () {
     // Retrieve the current value of the input field
     var  inputValue = geocoderInput.value;
     // save the value and use it on the job api
@@ -195,6 +192,9 @@ searchBtn.addEventListener("click" , function (event) {
     fetchJobData(selectedCity , distanceMax , salaryMin);
 
 });
+
+
+$(".job-search-filters").prepend(geocoder.onAdd(map));
 
 
 
@@ -309,8 +309,8 @@ function createRadiusCircle(center, radiusKm){
           ],
           'base': 2
         },
-      'circle-color': '#B42222',
-      'circle-opacity': 0.6,
+      'circle-color': '#ADD8E6',
+      'circle-opacity': 0.2,
       },
       'filter': ['==', '$type', 'Point']
       });
