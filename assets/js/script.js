@@ -53,15 +53,14 @@ function clearMarkers() {
 
 
 
-
 //Mapbox api code, Note for coordinates it's always [long, lat] unless stated otherwise
 mapboxgl.accessToken = mapboxApiKey;
 const bounds = [
-    [-20.292977710656487, 47.063922517628896], // Southwest coordinates
-    [7.4041694390601736, 63.534042175490384,],  // Northeast coordinates
+  [-20.292977710656487, 47.063922517628896], // Southwest coordinates
+  [7.4041694390601736, 63.534042175490384], // Northeast coordinates
 ];
 
-//Renders map 
+//Renders map
 const map = new mapboxgl.Map({
     container: 'map',
     // Choose from Mapbox's core styles [https://docs.mapbox.com/api/maps/styles/]
@@ -71,37 +70,27 @@ const map = new mapboxgl.Map({
     maxBounds: bounds,
     });
 
-    function toggleSidebar(id) {
-        const elem = document.getElementById(id);
-        // Add or remove the 'collapsed' CSS class from the sidebar element.
-        // Returns boolean "true" or "false" whether 'collapsed' is in the class list.
-        const collapsed = elem.classList.toggle('collapsed');
-        const padding = {};
-        // 'id' is 'right' or 'left'. When run at start, this object looks like: '{left: 300}';
-        padding[id] = collapsed ? 0 : 300; // 0 if collapsed, 300 px if not. This matches the width of the sidebars in the .sidebar CSS class.
-        // Use `map.easeTo()` with a padding option to adjust the map's center accounting for the position of sidebars.
-        map.easeTo({
-        padding: padding,
-        duration: 1000 // In ms. This matches the CSS transition duration property.
-        });
-        }
-         
-        map.on('load', () => {
-        toggleSidebar('left');
-        
-        });
+// toggle sidebar
+function toggleSidebar(id) {
+  const elem = document.getElementById(id);
+  // Add or remove the 'collapsed' CSS class from the sidebar element.
+  // Returns boolean "true" or "false" whether 'collapsed' is in the class list.
+  const collapsed = elem.classList.toggle("collapsed");
+        $(".map-place-search").toggle("hide")
+  const padding = {};
+  // 'id' is 'right' or 'left'. When run at start, this object looks like: '{left: 300}';
+  padding[id] = collapsed ? 0 : 300; // 0 if collapsed, 300 px if not. This matches the width of the sidebars in the .sidebar CSS class.
+  // Use `map.easeTo()` with a padding option to adjust the map's center accounting for the position of sidebars.
+  map.easeTo({
+    padding: padding,
+    duration: 1000, // In ms. This matches the CSS transition duration property.
+  });
+}
 
-        // to work on
-    // function openNav() {
-    //     document.getElementById("mySidebar").style.width = "250px";
-    //     document.getElementById("main").style.marginLeft = "250px";
-    //   }
-      
-    //   function closeNav() {
-    //     document.getElementById("mySidebar").style.width = "0";
-    //     document.getElementById("main").style.marginLeft= "0";
-    //   }
-  
+map.on("load", () => {
+  toggleSidebar("left");
+});
+
 //search functionality
  // Add an event listener to the geocoder control
  const geocoder = new MapboxGeocoder({
@@ -126,7 +115,7 @@ geocoderInput.addEventListener('input', function () {
     
 });
 
-var searchBtn = document.querySelector("#search");
+var searchBtn = document.querySelector("#search-button");
 
 searchBtn.addEventListener("click" , function (event) {
     event.preventDefault();
@@ -167,15 +156,16 @@ $( function() {
     $( "#distanceSlider-range" ).slider({
       range: true,
       min: 0,
-      max: 10000,
-      values: [ 0, 0 ],
+      max: 1000,
+      values: [ 0, 10000 ],
       slide: function( event, ui ) {
         $( "#minDistanceAmount" ).val( ui.values[ 0 ]);
         $( "#maxDistanceAmount" ).val( ui.values[ 1 ]);
       }
     });
-    $( "#distanceAmount" ).val(  $( "#distanceSlider-range" ).slider( "values", 0 ) +
-      $( "#distanceSlider-range" ).slider( "values", 1 ) );
+    $("#minDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 0 ));
+    $("#maxDistanceAmount").val(  $( "#distanceSlider-range" ).slider( "values", 1 ));
+     
   } );
 
 
@@ -185,6 +175,126 @@ $("#minDistanceAmount").keyup(function () {
 });
 
 $("#maxDistanceAmount").keyup(function () { 
-    $( "#distanceSlider-range" ).slider("values", 1, parseInt($(this).val()));
+    $("#distanceSlider-range").slider("values", 1, parseInt($(this).val()));
+});
+function addKeyword(keywordInput){
+    $("#keywords-input").val("");
+    if( keywordInput != ""){
+        var $li = $("<li>").addClass("row").append(
+            $("<p>").text(keywordInput).addClass("keyword col").append(
+            $("<button>").addClass("delete-keyword btn btn-danger col").text("-")) 
+            );
+        $("#keywords-list").prepend($li);
+
+    }
+}
+
+$("#keywords-input").keydown(function(event){
+    if(event.keyCode == 13) {
+        event.preventDefault();
+        addKeyword($("#keywords-input").val().trim());
+        return false;
+    }
+})
+$("#keywords-submit").on("click", function(event){
+    event.preventDefault();
+    addKeyword($("#keywords-input").val().trim());
+    getKeywords();
+})
+
+$("#keywords-list").on("click", ".delete-keyword", function(event){
+    event.preventDefault();
+    $(this).closest("li").remove();
+})
+
+
+
+function createRadiusCircle(center, radiusKm){
+
+  const metersToPixelsAtMaxZoom = (meters, latitude) =>
+    meters / 0.075 / Math.cos(latitude * Math.PI / 180);
+
+    map.addSource('radius', {
+      'type': 'geojson',
+      'data': {
+      'type': 'Feature',
+      'geometry': {
+      'type': 'Point',
+      'coordinates': center,
+      }
+      }}
+      );
+     
+      
+      map.addLayer({
+      'id': 'radius',
+      'type': 'circle',
+      'source': 'radius',
+      'paint': {
+        "circle-radius": {
+          'stops': [
+            [0, 0],
+            [20, metersToPixelsAtMaxZoom(radiusKm*1000, center[1])]
+          ],
+          'base': 2
+        },
+      'circle-color': '#B42222',
+      'circle-opacity': 0.6,
+      },
+      'filter': ['==', '$type', 'Point']
+      });
+      }
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  if(map.getSource('radius')){
+    map.removeLayer('radius');
+    map.removeSource('radius');
+  }
+  createRadiusCircle(centerOfSearch ,$("#maxDistanceAmount").val());
 });
 
+geocoder.on('result', function(e) {
+   citySearched = e.result.place_name;
+   centerOfSearch = e.result.center;
+   
+
+})
+
+function getKeywords(){
+  var array = [];
+  $("#keywords-list").children('li').each(function(){
+    array.push($(this).children('p').text().slice(0, -1));
+  });
+  return array;
+}
+
+$("#search-button").on("click", function(event){
+  event.preventDefault();
+  var storageObj = {
+    "placeName": citySearched,
+    "centerOfPlace": centerOfSearch,
+    "minSalary": $(".min-salary-input").val(),
+    "minDistance": $("#minDistanceAmount").val(),
+    "maxDistance": $("#maxDistanceAmount").val(),
+    "keywords": JSON.stringify(getKeywords()),
+  }
+  localStorage.setItem("searchSettings", JSON.stringify(storageObj));
+})
+
+function getStoredSearchSettings() {  
+  var obj = localStorage.getItem("searchSettings");
+  obj = JSON.parse(obj);
+  obj.keywords = JSON.parse(obj.keywords);
+  geocoder.setInput(obj.placeName);
+  $(".min-salary-input").val(obj.minSalary);
+  $("#minDistanceAmount").val(obj.minDistance);
+  $("#maxDistanceAmount").val(obj.maxDistance);
+  obj.keywords.reverse().forEach(function(keyword){
+    addKeyword(keyword);
+  });
+}
+
+
+
+getStoredSearchSettings();
