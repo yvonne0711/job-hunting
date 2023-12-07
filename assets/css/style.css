@@ -120,8 +120,14 @@ body,
   z-index: 1;
   width: 300px;
   height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
+/* #applicationContent {
+  position: relative;
+} */
 /* 
     The sidebar styling has them "expanded" by default, we use CSS transforms to push them offscreen
     The toggleSidebar() function removes this class from the element in order to expand it.
@@ -212,4 +218,8 @@ body,
 
 .min-salary-input-container input {
   padding: 2px;
+}
+
+.modal {
+  z-index: 1050; 
 }
