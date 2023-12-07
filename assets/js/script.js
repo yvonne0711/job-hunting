@@ -1,3 +1,74 @@
+//modal 
+//load DOM content first
+document.addEventListener("DOMContentLoaded", function () {
+  const apiKey1 = localStorage.getItem("adzunaApiKey");
+  const apiKey2 = localStorage.getItem("adzunaApiID");
+  const apiKey3 = localStorage.getItem("mapboxApiKey");
+
+  if (!apiKey1 || !apiKey2 || !apiKey3) {
+    $("#apiKeyModal").modal('show')
+    // Show the API key modal if any key is not present in local storage
+    $("#apiKeyModal").modal({ backdrop: 'static', keyboard: false });
+
+    // Add an event listener for the Save API Key button in the modal
+    document.getElementById("saveApiKeyButton").addEventListener("click", function () {
+      // Save API keys to local storage
+      saveApiKeys();
+
+      // Check if the entered keys match the ones in api.js
+      if (correctApiKeys()) {
+        // Close the modal if keys are validated
+        $("#apiKeyModal").modal("hide");
+      } else {
+          // Display an error or take appropriate action if keys don't match
+          alert("Invalid API keys. Please enter valid keys.");
+      }
+    });
+  }
+});
+
+// Function to validate API keys
+function correctApiKeys() {
+  const enteredApiKey1 = document.getElementById("apiKey1").value;
+  const enteredApiKey2 = document.getElementById("apiKey2").value;
+  const enteredApiKey3 = document.getElementById("apiKey3").value;
+
+  // Compare entered keys with the ones in api.js
+  return (
+    enteredApiKey1 === adzunaApiKey &&
+    enteredApiKey2 === adzunaApiID &&
+    enteredApiKey3 === mapboxApiKey
+  );
+}
+
+// Function to save API keys to local storage
+function saveApiKeys() {
+  const apiKey1 = document.getElementById("apiKey1").value;
+  const apiKey2 = document.getElementById("apiKey2").value;
+  const apiKey3 = document.getElementById("apiKey3").value;
+
+  localStorage.setItem("adzunaApiKey", apiKey1);
+  localStorage.setItem("adzunaApiID", apiKey2);
+  localStorage.setItem("mapboxApiKey", apiKey3);
+}
+
+var citySearched;
+var centerOfSearch;
+
+
+fetch(
+  "https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=" +
+    adzunaApiID +
+    "&app_key=" +
+    adzunaApiKey
+)
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    console.log(data);
+  });
+
 var selectedCity = "";
 var distanceMax = 0;
 var salaryMin = 0;
