@@ -5,7 +5,7 @@ var markers = [];
 
 function fetchJobData(selectedCity , distanceMax , salaryMin) {
     clearMarkers();
-fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id="+adzunaApiID+"&app_key=" +adzunaApiKey+ "&what=web%20developer&results_per_page=50&where=" + selectedCity+ "&distance=" + Number(distanceMax)+ "&salary_min=" + Number(salaryMin))
+fetch("https://api.adzuna.com/v1/api/jobs/gb/search/1?app_id=cf5201aa"+"&app_key=238174e9d6e1cb476ff703261ca0e8df&what=web%20developer&results_per_page=50&where=" + selectedCity+ "&distance=" + Number(distanceMax)+ "&salary_min=" + Number(salaryMin))
 .then(function (response) {
     if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -54,7 +54,7 @@ function clearMarkers() {
 
 
 //Mapbox api code, Note for coordinates it's always [long, lat] unless stated otherwise
-mapboxgl.accessToken = mapboxApiKey;
+mapboxgl.accessToken = "pk.eyJ1IjoibWFrc2ltbm90bWF4aW0iLCJhIjoiY2xwazR5MTFvMDZjeDJxcXYyZHJqODJqeCJ9.HAlVImUDmwDmDt_HQplGvg";
 const bounds = [
   [-20.292977710656487, 47.063922517628896], // Southwest coordinates
   [7.4041694390601736, 63.534042175490384], // Northeast coordinates
